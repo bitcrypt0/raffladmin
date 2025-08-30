@@ -48,10 +48,10 @@ export const SUPPORTED_NETWORKS = {
     rpcUrl: 'https://avalanche-fuji.drpc.org',
     explorer: 'https://testnet.snowscan.xyz',
     contractAddresses: {
-      raffleManager: '0x9E9Dc5538d21A1c63C555c2d9c67478d9ecE5f6A',
-      raffleDeployer: '0x4aeC94224Cb9DdDeA4d12EdCD02A52101c8894Cb',
-      revenueManager: '0x9127D3bb50f09499de014BbDE27b9AC58Fb09f34',
-      nftFactory: '0x653D377C30d635C9268DacE7385430127eBda8D2'
+      raffleManager: '0x0cb72c04AfD46Fc91DB50FBa0e215Ad61A385781',
+      raffleDeployer: '0x1d87Df2CB34fC115E4dA9a9a69d6b7b5E83d3381',
+      revenueManager: '0x723A31c0C8eCc1fE6dCb22eE1113AEC885b3144c',
+      nftFactory: '0x2F43A7D4C8723C93B15b5cF8b3061C06de4Bda87'
     }
   },
   43114: {
@@ -92,10 +92,10 @@ export const SUPPORTED_NETWORKS = {
     rpcUrl: 'https://sepolia.infura.io',
     explorer: 'https://sepolia.etherscan.io',
     contractAddresses: {
-      raffleManager: '0xBa507ac4a3Ce23957Ee423Fc037183B5d7632D1d',
-      raffleDeployer: '0x6d5229392Bd75e444d055bB3f749502B3Cf2630B',
-      revenueManager: '0x4537557520Ab4F9d7565fF9476c2A57985d3f24f',
-      nftFactory: '0x883a0F1eCe26C1978ca3EfE384B40bd091D75F5c'
+      raffleManager: '0x12EFd87ebc5e4A897095615E0FC3270fF1bD4EdC',
+      raffleDeployer: '0x9E37b79279EF016BbeD38A54eAD6389C4374D25F',
+      revenueManager: '0x47d0db42a0619e15046ACD40Ae9721863EDDEeCD',
+      nftFactory: '0x5307846f41035FA9FD0054BE731a25C0A3Ee37E1'
     }
   },
   11155420: {
