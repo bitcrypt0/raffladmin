@@ -4,10 +4,10 @@ export const SUPPORTED_NETWORKS = {
     rpcUrl: 'https://ethereum-rpc.publicnode.com',
     explorer: 'https://etherscan.io',
     contractAddresses: {
-      raffleManager: '0x...',
-      raffleDeployer: '0x...',
-      revenueManager: '0x...',
-      nftFactory: '0x...'
+      raffleManager: '0xf468403383a0A42136Cbe92633771f5CB280A17C',
+      raffleDeployer: '0x75249eB4844E02039Fc0F3016eF039690EEdF021',
+      revenueManager: '0x3BC2d0051B14E38D598DBccA504d1da78c46d46E',
+      nftFactory: '0xE6Ed36377BC7E68C64a589c457Da9E02461B9b99'
     }
   },
   10: {
