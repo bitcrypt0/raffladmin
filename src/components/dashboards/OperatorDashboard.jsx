@@ -1,119 +1,71 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Square, Zap, Award, Settings } from 'lucide-react';
+import { DollarSign, Settings, Trash2, CheckCircle } from 'lucide-react';
 import { useWallet } from '../../contexts/WalletContext';
 import { useContract } from '../../contexts/ContractContext';
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '../ui/table';
-
-const RAFFLE_STATE = [
-  'Pending',           // 0
-  'Active',            // 1
-  'Ended',             // 2
-  'Drawing',           // 3
-  'Completed',         // 4
-  'Deleted',           // 5
-  'Activation Failed', // 6
-  'All Prizes Claimed',// 7
-  'Unengaged'          // 8
-];
-
-function formatTimestamp(ts) {
-  if (!ts) return '-';
-  const date = new Date(ts * 1000);
-  return date.toLocaleString();
-}
-
-function getCountdown(ts) {
-  if (!ts) return '-';
-  const now = Math.floor(Date.now() / 1000);
-  const diff = ts - now;
-  if (diff <= 0) return '0s';
-  const h = Math.floor(diff / 3600);
-  const m = Math.floor((diff % 3600) / 60);
-  const s = diff % 60;
-  return `${h}h ${m}m ${s}s`;
-}
-
-const OperatorCard = ({ title, description, icon: Icon, action, loading, disabled }) => (
-  <div className="bg-card border border-border rounded-lg p-6">
-    <div className="flex items-center gap-3 mb-4">
-      <div className="p-2 bg-primary/10 rounded-lg">
-        <Icon className="h-6 w-6 text-primary" />
-      </div>
-      <div>
-        <h3 className="text-lg font-semibold">{title}</h3>
-        <p className="text-sm text-muted-foreground">{description}</p>
-      </div>
-    </div>
-    <button
-      onClick={action}
-      disabled={loading || disabled}
-      className="w-full bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors disabled:opacity-50"
-    >
-      {loading ? 'Processing...' : title}
-    </button>
-  </div>
-);
+import { SUPPORTED_NETWORKS } from '../../networks';
 
 const OperatorDashboard = () => {
-  const { connected } = useWallet();
+  const { connected, chainId } = useWallet();
   const { contracts, executeTransaction, getContractInstance } = useContract();
-  const [raffles, setRaffles] = useState([]);
+  const [pools, setPools] = useState([]);
   const [loading, setLoading] = useState({});
   const [refreshing, setRefreshing] = useState(false);
 
-  // Fetch all raffles and their info
+  // Fetch all pools from ProtocolManager
   useEffect(() => {
-    if (!contracts.raffleManager) return;
+    if (!contracts.protocolManager) return;
     let cancelled = false;
-    async function fetchRaffles() {
+
+    async function fetchPools() {
       setRefreshing(true);
-    try {
-        const addresses = await contracts.raffleManager.getAllRaffles();
-        console.log('Found raffle addresses:', addresses);
+      try {
+        const addresses = await contracts.protocolManager.getAllPools();
         
-        const raffleData = await Promise.all(
+        const poolData = await Promise.all(
           addresses.map(async (addr) => {
             try {
-              const raffle = getContractInstance(addr, 'raffle');
-              if (!raffle) {
-                console.error(`Failed to create contract instance for ${addr}`);
+              const pool = getContractInstance(addr, 'pool');
+              if (!pool) {
                 return {
                   address: addr,
                   name: 'Error: Invalid Contract',
-                  startTime: 0,
-                  endTime: 0,
-                  state: -1,
+                  globalFeeProtocolRevenue: '0',
+                  pendingProtocolFee: '0',
+                  state: null,
+                  isVRFConsumer: false,
                   error: 'Failed to create contract instance',
                   contract: null,
                 };
               }
               
-              const [name, startTime, endTime, state] = await Promise.all([
-                raffle.name(),
-                raffle.startTime(),
-                raffle.endTime(),
-                raffle.state(),
+              // Fetch pool data and VRF consumer status in parallel
+              const [name, globalFeeProtocolRevenue, pendingProtocolFee, state, isVRFConsumer] = await Promise.all([
+                pool.name(),
+                pool.globalFeeProtocolRevenue(),
+                pool.pendingProtocolFee(),
+                pool.state(),
+                contracts.protocolManager.isVRFConsumer(addr),
               ]);
-              
-              console.log(`Raffle ${addr} data:`, { name, startTime: startTime.toString(), endTime: endTime.toString(), state: state.toString() });
               
               return {
                 address: addr,
                 name,
-                startTime: Number(startTime),
-                endTime: Number(endTime),
-                state: Number(state),
-                contract: raffle,
+                globalFeeProtocolRevenue: globalFeeProtocolRevenue.toString(),
+                pendingProtocolFee: pendingProtocolFee.toString(),
+                state: parseInt(state.toString()),
+                isVRFConsumer,
+                contract: pool,
                 error: null,
               };
             } catch (e) {
-              console.error(`Error fetching data for raffle ${addr}:`, e);
               return {
                 address: addr,
                 name: 'Error: ' + (e.message || 'Unknown error'),
-                startTime: 0,
-                endTime: 0,
-                state: -1,
+                globalFeeProtocolRevenue: '0',
+                pendingProtocolFee: '0',
+                state: null,
+                isVRFConsumer: false,
                 error: e.message || 'Unknown error',
                 contract: null,
               };
@@ -122,41 +74,102 @@ const OperatorDashboard = () => {
         );
         
         if (!cancelled) {
-          console.log('Final raffle data:', raffleData);
-          setRaffles(raffleData);
+          setPools(poolData);
         }
       } catch (e) {
-        console.error('Error fetching raffle addresses:', e);
-        if (!cancelled) setRaffles([]);
-    } finally {
+        if (!cancelled) setPools([]);
+      } finally {
         setRefreshing(false);
+      }
     }
-    }
-    fetchRaffles();
+    
+    fetchPools();
     return () => { cancelled = true; };
-  }, [contracts.raffleManager, getContractInstance]);
+  }, [contracts.protocolManager, getContractInstance]);
 
-  // Operator actions - all called directly on raffle contracts
-  const handleAction = async (raffle, action) => {
-    if (!raffle.contract) {
-      alert('Raffle contract not available');
+  // Withdraw protocol revenue action
+  const handleWithdrawProtocolRevenue = async (pool) => {
+    if (!pool.contract) {
+      alert('Pool contract not available');
       return;
     }
 
-    setLoading((prev) => ({ ...prev, [raffle.address + action]: true }));
+    setLoading((prev) => ({ ...prev, [pool.address]: true }));
     try {
-      const result = await executeTransaction(raffle.contract[action]);
+      const result = await executeTransaction(pool.contract.withdrawProtocolRevenue);
       if (result.success) {
-        // Optionally, refresh raffle info after action
-        setRaffles((prev) => prev.map(r => r.address === raffle.address ? { ...r, state: -1 } : r));
+        alert('Protocol revenue withdrawn successfully!');
+        // Refresh pool data - reset both values after withdrawal
+        setPools((prev) => prev.map(p => 
+          p.address === pool.address 
+            ? { ...p, globalFeeProtocolRevenue: '0', pendingProtocolFee: '0' } 
+            : p
+        ));
       } else {
         throw new Error(result.error);
       }
     } catch (e) {
       alert('Error: ' + (e?.message || e));
     } finally {
-      setLoading((prev) => ({ ...prev, [raffle.address + action]: false }));
+      setLoading((prev) => ({ ...prev, [pool.address]: false }));
     }
+  };
+
+  // Remove from VRF subscription action
+  const handleRemoveConsumer = async (pool) => {
+    if (!pool.contract) {
+      alert('Pool contract not available');
+      return;
+    }
+
+    setLoading((prev) => ({ ...prev, [pool.address]: true }));
+    try {
+      const result = await executeTransaction(pool.contract.removeFromVRFSubscription);
+      if (result.success) {
+        alert('Consumer removed from VRF subscription successfully!');
+        // Optionally refresh pool data or remove from list
+      } else {
+        throw new Error(result.error);
+      }
+    } catch (e) {
+      alert('Error: ' + (e?.message || e));
+    } finally {
+      setLoading((prev) => ({ ...prev, [pool.address]: false }));
+    }
+  };
+
+  // Filter pools with protocol revenue available for withdrawal
+  const poolsWithFees = pools.filter(pool => 
+    !pool.error && (
+      parseFloat(pool.globalFeeProtocolRevenue) > 0 || 
+      parseFloat(pool.pendingProtocolFee) > 0
+    )
+  );
+
+  // Filter completed pools - includes Completed, Deleted, ActivationFailed, AllPrizesClaimed, and Unengaged states
+  // Only show VRF consumers in this section
+  const completedPools = pools.filter(pool => 
+    !pool.error && 
+    pool.isVRFConsumer && 
+    pool.state !== null && (
+      pool.state === 4 || // Completed
+      pool.state === 5 || // Deleted
+      pool.state === 6 || // ActivationFailed
+      pool.state === 7 || // AllPrizesClaimed
+      pool.state === 8    // Unengaged
+    )
+  );
+
+  // Get state name for display (only for inactive states tracked by this interface)
+  const getStateName = (state) => {
+    const stateNames = {
+      4: 'Completed',
+      5: 'Deleted',
+      6: 'ActivationFailed',
+      7: 'AllPrizesClaimed',
+      8: 'Unengaged'
+    };
+    return stateNames[state] || `State ${state}`;
   };
 
   if (!connected) {
@@ -173,123 +186,208 @@ const OperatorDashboard = () => {
     );
   }
 
+  // Check if connected to a supported network
+  const currentNetwork = SUPPORTED_NETWORKS[chainId];
+  if (!currentNetwork) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center">
+          <Settings className="h-16 w-16 text-red-500 mx-auto mb-4" />
+          <h2 className="text-2xl font-semibold mb-2">Unsupported Network</h2>
+          <p className="text-muted-foreground mb-4">
+            You are connected to an unsupported network (Chain ID: {chainId}).
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Please switch to one of the supported networks:
+          </p>
+          <div className="mt-4 space-y-2">
+            {Object.entries(SUPPORTED_NETWORKS).map(([id, network]) => (
+              <div key={id} className="text-sm">
+                <span className="font-medium">{network.name}</span> (Chain ID: {id})
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Check if contract addresses are configured for this network
+  if (!currentNetwork.contractAddresses?.protocolManager) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center">
+          <Settings className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
+          <h2 className="text-2xl font-semibold mb-2">Network Not Configured</h2>
+          <p className="text-muted-foreground mb-4">
+            You are connected to {currentNetwork.name}, but the ProtocolManager contract is not configured for this network.
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Please contact the development team to configure contracts for this network.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-semibold">Operator Dashboard</h2>
-        <button onClick={() => window.location.reload()} className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors">Refresh</button>
-      </div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Raffle Name</TableHead>
-            <TableHead>Address</TableHead>
-            <TableHead>Start Time</TableHead>
-            <TableHead>End Time</TableHead>
-            <TableHead>Countdown to Start</TableHead>
-            <TableHead>Countdown to End</TableHead>
-            <TableHead>State</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {raffles.length === 0 && (
-            <TableRow>
-              <TableCell colSpan={8} className="text-center">{refreshing ? 'Loading raffles...' : 'No raffles found.'}</TableCell>
-            </TableRow>
-          )}
-          {raffles.map((raffle) => (
-            <TableRow key={raffle.address} className={raffle.error ? 'bg-red-50' : ''}>
-              <TableCell>
-                <div>
-                  <div className={raffle.error ? 'text-red-600 font-medium' : ''}>
-                    {raffle.name}
-                  </div>
-                  {raffle.error && (
-                    <div className="text-xs text-red-500 mt-1">
-                      {raffle.error}
-      </div>
-                  )}
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h2 className="text-2xl font-semibold">Operator Dashboard</h2>
+          <p className="text-muted-foreground">Manage protocol fees and inactive pools</p>
+          <div className="flex items-center gap-4 mt-2">
+            <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+              {currentNetwork.name} (Chain ID: {chainId})
+            </span>
+            <span className="text-xs text-muted-foreground font-mono">
+              Contract: {currentNetwork.contractAddresses.protocolManager.slice(0, 10)}...{currentNetwork.contractAddresses.protocolManager.slice(-8)}
+            </span>
+          </div>
         </div>
-              </TableCell>
-              <TableCell className="font-mono text-xs">{raffle.address}</TableCell>
-              <TableCell>
-                {raffle.error ? (
-                  <span className="text-red-500">Error</span>
-                ) : raffle.startTime === 0 ? (
-                  <span className="text-gray-500">Not set</span>
-                ) : (
-                  formatTimestamp(raffle.startTime)
-                )}
-              </TableCell>
-              <TableCell>
-                {raffle.error ? (
-                  <span className="text-red-500">Error</span>
-                ) : raffle.endTime === 0 ? (
-                  <span className="text-gray-500">Not set</span>
-                ) : (
-                  formatTimestamp(raffle.endTime)
-                )}
-              </TableCell>
-              <TableCell>
-                {raffle.error ? (
-                  <span className="text-red-500">-</span>
-                ) : raffle.startTime === 0 ? (
-                  <span className="text-gray-500">-</span>
-                ) : (
-                  getCountdown(raffle.startTime)
-                )}
-              </TableCell>
-              <TableCell>
-                {raffle.error ? (
-                  <span className="text-red-500">-</span>
-                ) : raffle.endTime === 0 ? (
-                  <span className="text-gray-500">-</span>
-                ) : (
-                  getCountdown(raffle.endTime)
-                )}
-              </TableCell>
-              <TableCell>
-                {raffle.error ? (
-                  <span className="text-red-500">Error</span>
-                ) : (
-                  (raffle.state >= 0 && raffle.state < RAFFLE_STATE.length)
-                    ? RAFFLE_STATE[raffle.state]
-                    : 'Unknown'
-                )}
-              </TableCell>
-              <TableCell>
-                {raffle.error ? (
-                  <span className="text-red-500 text-sm">No actions available</span>
-                ) : (
-                  <div className="flex gap-2 flex-wrap">
-                    <button
-                      className="bg-blue-500 text-white px-2 py-1 rounded disabled:opacity-50"
-                      disabled={loading[raffle.address+'activate']}
-                      onClick={() => handleAction(raffle, 'activate')}
-                    >Activate</button>
-                    <button
-                      className="bg-yellow-500 text-white px-2 py-1 rounded disabled:opacity-50"
-                      disabled={loading[raffle.address+'requestRandomWords']}
-                      onClick={() => handleAction(raffle, 'requestRandomWords')}
-                    >Request Randomness</button>
-                    <button
-                      className="bg-red-500 text-white px-2 py-1 rounded disabled:opacity-50"
-                      disabled={loading[raffle.address+'endRaffle']}
-                      onClick={() => handleAction(raffle, 'endRaffle')}
-                    >End</button>
-                    <button
-                      className="bg-green-500 text-white px-2 py-1 rounded disabled:opacity-50"
-                      disabled={loading[raffle.address+'processBatch']}
-                      onClick={() => handleAction(raffle, 'processBatch')}
-                    >Process Batch</button>
+        <button 
+          onClick={() => window.location.reload()} 
+          className="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/90 transition-colors"
+        >
+          Refresh
+        </button>
       </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Left Half - Protocol Fee Management */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 mb-4">
+            <DollarSign className="h-5 w-5 text-green-600" />
+            <h3 className="text-lg font-semibold">Protocol Fee Management</h3>
+          </div>
+          <p className="text-sm text-muted-foreground mb-4">
+            Pools with pending protocol revenue that can be withdrawn.
+          </p>
+          
+          <div className="bg-card border border-border rounded-lg">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Pool Name</TableHead>
+                  <TableHead>Global Revenue (ETH)</TableHead>
+                  <TableHead>Pending Fee (ETH)</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {poolsWithFees.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={4} className="text-center py-8">
+                      {refreshing ? 'Loading pools...' : 'No pools with pending fees found.'}
+                    </TableCell>
+                  </TableRow>
                 )}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+                {poolsWithFees.map((pool) => (
+                  <TableRow key={pool.address}>
+                    <TableCell>
+                      <div>
+                        <div className="font-medium">{pool.name}</div>
+                        <div className="text-xs text-muted-foreground font-mono">
+                          {pool.address.slice(0, 10)}...{pool.address.slice(-8)}
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <DollarSign className="h-4 w-4 text-green-600" />
+                        <span className="font-medium">
+                          {(parseFloat(pool.globalFeeProtocolRevenue) / 1e18).toFixed(6)}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <DollarSign className="h-4 w-4 text-blue-600" />
+                        <span className="font-medium">
+                          {(parseFloat(pool.pendingProtocolFee) / 1e18).toFixed(6)}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <button
+                        className="bg-green-600 text-white px-3 py-1 rounded-md hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm"
+                        disabled={loading[pool.address]}
+                        onClick={() => handleWithdrawProtocolRevenue(pool)}
+                      >
+                        <DollarSign className="h-3 w-3" />
+                        {loading[pool.address] ? 'Withdrawing...' : 'Withdraw'}
+                      </button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+
+        {/* Right Half - Completed Pools Management */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 mb-4">
+            <CheckCircle className="h-5 w-5 text-blue-600" />
+            <h3 className="text-lg font-semibold">Inactive Pools Management</h3>
+          </div>
+          <p className="text-sm text-muted-foreground mb-4">
+            Inactive pools (Completed, Deleted, ActivationFailed, AllPrizesClaimed, Unengaged) that can be removed from VRF subscription.
+          </p>
+          
+          <div className="bg-card border border-border rounded-lg">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Pool Name</TableHead>
+                  <TableHead>State</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {completedPools.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={3} className="text-center py-8">
+                      {refreshing ? 'Loading pools...' : 'No inactive pools found.'}
+                    </TableCell>
+                  </TableRow>
+                )}
+                {completedPools.map((pool) => (
+                  <TableRow key={pool.address}>
+                    <TableCell>
+                      <div>
+                        <div className="font-medium">{pool.name}</div>
+                        <div className="text-xs text-muted-foreground font-mono">
+                          {pool.address.slice(0, 10)}...{pool.address.slice(-8)}
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        pool.state === 3 ? 'bg-green-100 text-green-800' : 
+                        pool.state === 4 ? 'bg-gray-100 text-gray-800' : 
+                        'bg-blue-100 text-blue-800'
+                      }`}>
+                        {getStateName(pool.state)}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <button
+                        className="bg-red-600 text-white px-3 py-1 rounded-md hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm"
+                        disabled={loading[pool.address]}
+                        onClick={() => handleRemoveConsumer(pool)}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                        {loading[pool.address] ? 'Removing...' : 'Remove Consumer'}
+                      </button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

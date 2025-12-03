@@ -3,14 +3,12 @@ import { WalletProvider } from './contexts/WalletContext';
 import { ContractProvider } from './contexts/ContractContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { Header, Navigation } from './components/Layout';
-import ParticipantDashboard from './components/dashboards/ParticipantDashboard';
-import CreatorDashboard from './components/dashboards/CreatorDashboard';
 import AdminDashboard from './components/dashboards/AdminDashboard';
 import OperatorDashboard from './components/dashboards/OperatorDashboard';
 import './App.css';
 
 function App() {
-  const [activeTab, setActiveTab] = useState('participant');
+  const [activeTab, setActiveTab] = useState('admin');
 
   // Set dark theme as default
   useEffect(() => {
@@ -19,16 +17,12 @@ function App() {
 
   const renderDashboard = () => {
     switch (activeTab) {
-      case 'participant':
-        return <ParticipantDashboard />;
-      case 'creator':
-        return <CreatorDashboard />;
       case 'admin':
         return <AdminDashboard />;
       case 'operator':
         return <OperatorDashboard />;
       default:
-        return <ParticipantDashboard />;
+        return <AdminDashboard />;
     }
   };
 

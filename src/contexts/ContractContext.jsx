@@ -37,10 +37,10 @@ export const ContractProvider = ({ children }) => {
     const contractAddresses = network.contractAddresses;
     const newContracts = {};
     try {
-      if (contractAddresses.raffleManager) {
-        newContracts.raffleManager = new ethers.Contract(
-          contractAddresses.raffleManager,
-          contractABIs.raffleManager,
+      if (contractAddresses.protocolManager) {
+        newContracts.protocolManager = new ethers.Contract(
+          contractAddresses.protocolManager,
+          contractABIs.protocolManager,
           signer
         );
       }

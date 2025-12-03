@@ -4,7 +4,7 @@ export const SUPPORTED_NETWORKS = {
     rpcUrl: 'https://ethereum-rpc.publicnode.com',
     explorer: 'https://etherscan.io',
     contractAddresses: {
-      raffleManager: '0xf468403383a0A42136Cbe92633771f5CB280A17C',
+      protocolManager: '0xf468403383a0A42136Cbe92633771f5CB280A17C',
       raffleDeployer: '0x75249eB4844E02039Fc0F3016eF039690EEdF021',
       revenueManager: '0x3BC2d0051B14E38D598DBccA504d1da78c46d46E',
       nftFactory: '0xE6Ed36377BC7E68C64a589c457Da9E02461B9b99'
@@ -15,7 +15,7 @@ export const SUPPORTED_NETWORKS = {
     rpcUrl: 'https://mainnet.optimism.io',
     explorer: 'https://optimistic.etherscan.io',
     contractAddresses: {
-      raffleManager: '0x...',
+      protocolManager: '0x...',
       raffleDeployer: '0x...',
       revenueManager: '0x...',
       nftFactory: '0x...'
@@ -26,7 +26,7 @@ export const SUPPORTED_NETWORKS = {
     rpcUrl: 'https://bsc.blockrazor.xyz',
     explorer: 'https://bscscan.com',
     contractAddresses: {
-      raffleManager: '0x...',
+      protocolManager: '0x...',
       raffleDeployer: '0x...',
       revenueManager: '0x...',
       nftFactory: '0x...'
@@ -37,10 +37,10 @@ export const SUPPORTED_NETWORKS = {
     rpcUrl: 'https://bsc-testnet-rpc.publicnode.com',
     explorer: 'https://testnet.bscscan.com',
     contractAddresses: {
-      raffleManager: '0xd32E33197611473C917301965726e12Da1fb19F4',
-      raffleDeployer: '0x82DEB79fE0a2380aB2799F8675Af296A1133F40F',
-      revenueManager: '0x20A10ABbafbFff78402D1E79cEF1423282C64568',
-      nftFactory: '0xa22a2105fBe227Db05FD0D76ccbC317A53EC9aC5'
+      protocolManager: '0xa3F0AF8E90644bF0a371fABf8Ed688371352E2Fb',
+      raffleDeployer: '0x422D280BFd76f4533F670706AA0eeC63A2e1330a',
+      revenueManager: '0x2472e38aE1b868D1Dd0EFB59762D4e5f793a551f',
+      nftFactory: '0xb52606980b0a000adfc27F0de0DC49d2CDA1d6a5'
     }
   },
   43113: {
@@ -48,7 +48,7 @@ export const SUPPORTED_NETWORKS = {
     rpcUrl: 'https://avalanche-fuji.drpc.org',
     explorer: 'https://testnet.snowscan.xyz',
     contractAddresses: {
-      raffleManager: '0x0cb72c04AfD46Fc91DB50FBa0e215Ad61A385781',
+      protocolManager: '0x0cb72c04AfD46Fc91DB50FBa0e215Ad61A385781',
       raffleDeployer: '0x1d87Df2CB34fC115E4dA9a9a69d6b7b5E83d3381',
       revenueManager: '0x723A31c0C8eCc1fE6dCb22eE1113AEC885b3144c',
       nftFactory: '0x2F43A7D4C8723C93B15b5cF8b3061C06de4Bda87'
@@ -59,7 +59,7 @@ export const SUPPORTED_NETWORKS = {
     rpcUrl: 'https://avalanche.drpc.org',
     explorer: 'https://snowscan.xyz',
     contractAddresses: {
-      raffleManager: '0x...',
+      protocolManager: '0x...',
       raffleDeployer: '0x...',
       revenueManager: '0x...',
       nftFactory: '0x...'
@@ -70,7 +70,7 @@ export const SUPPORTED_NETWORKS = {
     rpcUrl: 'https://base.drpc.org',
     explorer: 'https://basescan.org',
     contractAddresses: {
-      raffleManager: '0x...',
+      protocolManager: '0x...',
       raffleDeployer: '0x...',
       revenueManager: '0x...',
       nftFactory: '0x...'
@@ -81,10 +81,10 @@ export const SUPPORTED_NETWORKS = {
     rpcUrl: 'https://base-sepolia-rpc.publicnode.com',
     explorer: 'https://sepolia.basescan.org',
     contractAddresses: {
-      raffleManager: '0x86371A38052eB615c93fa5fF58Bf9B4F582c8456',
-      raffleDeployer: '0x093fde9C9DbC7AaC5AeD570AFE88CAEee827C719',
-      revenueManager: '0xEc3742ef4cE13e0AF78F36407B675976201D4607',
-      nftFactory: '0xE8408DfA54584e6946b9c3f267447cF8eB7Dc04e'
+      protocolManager: '0x049CE8dEd40B4fBf4C84159D2628bE8aE51473Ff',
+      poolDeployer: '0xA01bA89DE2C42c3aD3298500aF5DE97541d43714',
+      revenueManager: '0x90d363324bf5e870a0D3d42FB68d92625b9f557E',
+      nftFactory: '0x594aBad8f2f9f83B1d415a7e329D79BF88e8eA56'
     }
   },
   11155111: {
@@ -92,7 +92,7 @@ export const SUPPORTED_NETWORKS = {
     rpcUrl: 'https://sepolia.infura.io',
     explorer: 'https://sepolia.etherscan.io',
     contractAddresses: {
-      raffleManager: '0x1243f69977e4db974fA4fcAB20DcaA1af81e3b94',
+      protocolManager: '0x1243f69977e4db974fA4fcAB20DcaA1af81e3b94',
       raffleDeployer: '0x85c3A282075611D924723e20700A7D583014a5ae',
       revenueManager: '0x076925a375C1A14830486fff4C991Ad4279D56Bb',
       nftFactory: '0x6575629a471665886195AA7410d29272f295C66D'
@@ -103,7 +103,7 @@ export const SUPPORTED_NETWORKS = {
     rpcUrl: 'https://sepolia.optimism.io',
     explorer: 'https://sepolia-optimism.etherscan.io',
     contractAddresses: {
-      raffleManager: '0x27096A4cB1b37d6caAaa399286016C1fD9770a78',
+      protocolManager: '0x27096A4cB1b37d6caAaa399286016C1fD9770a78',
       raffleDeployer: '0xE300723adE1d200DE1C1F2F01EA1a8309E0c796c',
       revenueManager: '0x27930DAc4699fd813764aE57D4acc63A2192Ca16',
       nftFactory: '0x205b597cCC9c72A28A71abb9DD590FEB333B8B09'
@@ -114,7 +114,7 @@ export const SUPPORTED_NETWORKS = {
     rpcUrl: 'https://ronin.drpc.org',
     explorer: 'https://app.roninchain.com/',
     contractAddresses: {
-      raffleManager: '0x...',
+      protocolManager: '0x...',
       raffleDeployer: '0x...',
       revenueManager: '0x...',
       nftFactory: '0x...'
@@ -125,7 +125,7 @@ export const SUPPORTED_NETWORKS = {
     rpcUrl: 'https://saigon-testnet.roninchain.com/rpc',
     explorer: 'https://saigon-app.roninchain.com/explorer',
     contractAddresses: {
-      raffleManager: '0x...',
+      protocolManager: '0x...',
       raffleDeployer: '0x...',
       revenueManager: '0x...',
       nftFactory: '0x...'
@@ -136,7 +136,7 @@ export const SUPPORTED_NETWORKS = {
     rpcUrl: 'https://arbitrum.drpc.org',
     explorer: 'https://arbiscan.io',
     contractAddresses: {
-      raffleManager: '0x...',
+      protocolManager: '0x...',
       raffleDeployer: '0x...',
       revenueManager: '0x...',
       nftFactory: '0x...'
@@ -147,10 +147,10 @@ export const SUPPORTED_NETWORKS = {
     rpcUrl: 'https://endpoints.omniatech.io/v1/arbitrum/sepolia/public',
     explorer: 'https://sepolia.arbiscan.io',
     contractAddresses: {
-      raffleManager: '0xF425Db442318D587f04280956F562C99e52818E3',
+      protocolManager: '0xF425Db442318D587f04280956F562C99e52818E3',
       raffleDeployer: '0xa86aDF75CdE7BA7c23204cdfa095Cd498629091a',
       revenueManager: '0xd496047e70CEafd89a05C1B63910F10d0180F283',
       nftFactory: '0x1dF3590f141b6E0992EcE00D65d314Cf5B97D848'
     }
   },
-}; 
+};

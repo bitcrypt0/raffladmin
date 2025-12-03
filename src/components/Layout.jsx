@@ -17,7 +17,7 @@ const Header = () => {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-3">
               <Ticket className="h-8 w-8 text-primary" />
-              <span className="text-xl font-bold">Raffle Protocol</span>
+              <span className="text-xl font-bold">Pool Protocol</span>
             </div>
             
             <div className="flex items-center gap-4">
@@ -73,8 +73,6 @@ const Header = () => {
 
 const Navigation = ({ activeTab, setActiveTab }) => {
   const tabs = [
-    { id: 'participant', label: 'Participant Dashboard', icon: Users },
-    { id: 'creator', label: 'Creator Dashboard', icon: Ticket },
     { id: 'admin', label: 'Admin Dashboard', icon: Shield },
     { id: 'operator', label: 'Operator Dashboard', icon: SettingsIcon },
   ];
