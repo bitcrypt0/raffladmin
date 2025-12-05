@@ -1,4 +1,5 @@
 node_modules/
 abis/
-contracts/
+contracts (old)/
+contracts (latest)/
 package-lock.json
