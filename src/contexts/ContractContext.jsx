@@ -65,6 +65,20 @@ export const ContractProvider = ({ children }) => {
           signer
         );
       }
+      if (contractAddresses.rewardsFlywheel) {
+        newContracts.rewardsFlywheel = new ethers.Contract(
+          contractAddresses.rewardsFlywheel,
+          contractABIs.rewardsFlywheel,
+          signer
+        );
+      }
+      if (contractAddresses.poolDeployer) {
+        newContracts.poolDeployer = new ethers.Contract(
+          contractAddresses.poolDeployer,
+          contractABIs.poolDeployer,
+          signer
+        );
+      }
       setContracts(newContracts);
     } catch (error) {
       console.error('Error initializing contracts:', error);

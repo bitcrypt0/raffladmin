@@ -7,7 +7,8 @@ export const SUPPORTED_NETWORKS = {
       protocolManager: '0xf468403383a0A42136Cbe92633771f5CB280A17C',
       raffleDeployer: '0x75249eB4844E02039Fc0F3016eF039690EEdF021',
       revenueManager: '0x3BC2d0051B14E38D598DBccA504d1da78c46d46E',
-      nftFactory: '0xE6Ed36377BC7E68C64a589c457Da9E02461B9b99'
+      nftFactory: '0xE6Ed36377BC7E68C64a589c457Da9E02461B9b99',
+      rewardsFlywheel: '0x...'
     }
   },
   10: {
@@ -18,7 +19,8 @@ export const SUPPORTED_NETWORKS = {
       protocolManager: '0x...',
       raffleDeployer: '0x...',
       revenueManager: '0x...',
-      nftFactory: '0x...'
+      nftFactory: '0x...',
+      rewardsFlywheel: '0x...'
     }
   },
   56: {
@@ -29,7 +31,8 @@ export const SUPPORTED_NETWORKS = {
       protocolManager: '0x...',
       raffleDeployer: '0x...',
       revenueManager: '0x...',
-      nftFactory: '0x...'
+      nftFactory: '0x...',
+      rewardsFlywheel: '0x...'
     }
   },
   97: {
@@ -40,7 +43,8 @@ export const SUPPORTED_NETWORKS = {
       protocolManager: '0xa3F0AF8E90644bF0a371fABf8Ed688371352E2Fb',
       raffleDeployer: '0x422D280BFd76f4533F670706AA0eeC63A2e1330a',
       revenueManager: '0x2472e38aE1b868D1Dd0EFB59762D4e5f793a551f',
-      nftFactory: '0xb52606980b0a000adfc27F0de0DC49d2CDA1d6a5'
+      nftFactory: '0xb52606980b0a000adfc27F0de0DC49d2CDA1d6a5',
+      rewardsFlywheel: '0x...'
     }
   },
   43113: {
@@ -51,7 +55,8 @@ export const SUPPORTED_NETWORKS = {
       protocolManager: '0x0cb72c04AfD46Fc91DB50FBa0e215Ad61A385781',
       raffleDeployer: '0x1d87Df2CB34fC115E4dA9a9a69d6b7b5E83d3381',
       revenueManager: '0x723A31c0C8eCc1fE6dCb22eE1113AEC885b3144c',
-      nftFactory: '0x2F43A7D4C8723C93B15b5cF8b3061C06de4Bda87'
+      nftFactory: '0x2F43A7D4C8723C93B15b5cF8b3061C06de4Bda87',
+      rewardsFlywheel: '0x...'
     }
   },
   43114: {
@@ -62,7 +67,8 @@ export const SUPPORTED_NETWORKS = {
       protocolManager: '0x...',
       raffleDeployer: '0x...',
       revenueManager: '0x...',
-      nftFactory: '0x...'
+      nftFactory: '0x...',
+      rewardsFlywheel: '0x...'
     }
   },
   8453: {
@@ -73,7 +79,8 @@ export const SUPPORTED_NETWORKS = {
       protocolManager: '0x...',
       raffleDeployer: '0x...',
       revenueManager: '0x...',
-      nftFactory: '0x...'
+      nftFactory: '0x...',
+      rewardsFlywheel: '0x...'
     }
   },
   84532: {
@@ -81,10 +88,11 @@ export const SUPPORTED_NETWORKS = {
     rpcUrl: 'https://base-sepolia-rpc.publicnode.com',
     explorer: 'https://sepolia.basescan.org',
     contractAddresses: {
-      protocolManager: '0x186Aea67f35174ecE273d1aD719d8DD70a693Dc1',
-      poolDeployer: '0x49D4901F0Ac2d2d54c018a30327A746F06Ac48cA',
-      revenueManager: '0x49b3929f5eba1b721d42e034a8ae1745A33caC6E',
-      nftFactory: '0x1eaCc316066F2C5cc79C6E5c28CaEf9f9CB469Df'
+      protocolManager: '0x0D984A5481e1d169C69eEdFD1C7E891e85954Dde',
+      poolDeployer: '0x12F3BDC7EF325B8Bb276Ef892AB3Ae08901963bD',
+      revenueManager: '0x249CdDC74E46Fa9A76D6150e6A23B1df6B6edE81',
+      nftFactory: '0xD445FdB2d365D10e87e3223EDA0Ea448BAe0c175',
+      rewardsFlywheel: '0xfF80d0126684293f25D80cb604B06c330cA54d5e'
     }
   },
   11155111: {
@@ -95,7 +103,8 @@ export const SUPPORTED_NETWORKS = {
       protocolManager: '0x1243f69977e4db974fA4fcAB20DcaA1af81e3b94',
       raffleDeployer: '0x85c3A282075611D924723e20700A7D583014a5ae',
       revenueManager: '0x076925a375C1A14830486fff4C991Ad4279D56Bb',
-      nftFactory: '0x6575629a471665886195AA7410d29272f295C66D'
+      nftFactory: '0x6575629a471665886195AA7410d29272f295C66D',
+      rewardsFlywheel: '0x...'
     }
   },
   11155420: {
@@ -106,7 +115,8 @@ export const SUPPORTED_NETWORKS = {
       protocolManager: '0x27096A4cB1b37d6caAaa399286016C1fD9770a78',
       raffleDeployer: '0xE300723adE1d200DE1C1F2F01EA1a8309E0c796c',
       revenueManager: '0x27930DAc4699fd813764aE57D4acc63A2192Ca16',
-      nftFactory: '0x205b597cCC9c72A28A71abb9DD590FEB333B8B09'
+      nftFactory: '0x205b597cCC9c72A28A71abb9DD590FEB333B8B09',
+      rewardsFlywheel: '0x...'
     }
   },
   2020: {
@@ -117,7 +127,8 @@ export const SUPPORTED_NETWORKS = {
       protocolManager: '0x...',
       raffleDeployer: '0x...',
       revenueManager: '0x...',
-      nftFactory: '0x...'
+      nftFactory: '0x...',
+      rewardsFlywheel: '0x...'
     }
   },
   2021: {
@@ -128,7 +139,8 @@ export const SUPPORTED_NETWORKS = {
       protocolManager: '0x...',
       raffleDeployer: '0x...',
       revenueManager: '0x...',
-      nftFactory: '0x...'
+      nftFactory: '0x...',
+      rewardsFlywheel: '0x...'
     }
   },
   42161: {
@@ -139,7 +151,8 @@ export const SUPPORTED_NETWORKS = {
       protocolManager: '0x...',
       raffleDeployer: '0x...',
       revenueManager: '0x...',
-      nftFactory: '0x...'
+      nftFactory: '0x...',
+      rewardsFlywheel: '0x...'
     }
   },
   421614: {
@@ -150,7 +163,8 @@ export const SUPPORTED_NETWORKS = {
       protocolManager: '0xF425Db442318D587f04280956F562C99e52818E3',
       raffleDeployer: '0xa86aDF75CdE7BA7c23204cdfa095Cd498629091a',
       revenueManager: '0xd496047e70CEafd89a05C1B63910F10d0180F283',
-      nftFactory: '0x1dF3590f141b6E0992EcE00D65d314Cf5B97D848'
+      nftFactory: '0x1dF3590f141b6E0992EcE00D65d314Cf5B97D848',
+      rewardsFlywheel: '0x...'
     }
   },
 };
