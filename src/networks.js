@@ -88,11 +88,11 @@ export const SUPPORTED_NETWORKS = {
     rpcUrl: 'https://base-sepolia-rpc.publicnode.com',
     explorer: 'https://sepolia.basescan.org',
     contractAddresses: {
-      protocolManager: '0x0D984A5481e1d169C69eEdFD1C7E891e85954Dde',
-      poolDeployer: '0x12F3BDC7EF325B8Bb276Ef892AB3Ae08901963bD',
-      revenueManager: '0x249CdDC74E46Fa9A76D6150e6A23B1df6B6edE81',
-      nftFactory: '0xD445FdB2d365D10e87e3223EDA0Ea448BAe0c175',
-      rewardsFlywheel: '0xfF80d0126684293f25D80cb604B06c330cA54d5e'
+      protocolManager: '0x5eb752D45906eb32619F1fE6d5005734F10C3da2',
+      poolDeployer: '0x69602037B275Cc9506519AA1cE66b843C127bc7a',
+      revenueManager: '0x09C08a2E6465e8abD75F854FC3C7D01344964FaA',
+      nftFactory: '0x959c429900c63D2D1F453BA4c64FBa04DBFBF6f3',
+      rewardsFlywheel: '0xF6635D6F8527728a629D5CCDdaF985eCd88B820a'
     }
   },
   11155111: {
@@ -112,11 +112,11 @@ export const SUPPORTED_NETWORKS = {
     rpcUrl: 'https://sepolia.optimism.io',
     explorer: 'https://sepolia-optimism.etherscan.io',
     contractAddresses: {
-      protocolManager: '0x27096A4cB1b37d6caAaa399286016C1fD9770a78',
-      raffleDeployer: '0xE300723adE1d200DE1C1F2F01EA1a8309E0c796c',
-      revenueManager: '0x27930DAc4699fd813764aE57D4acc63A2192Ca16',
-      nftFactory: '0x205b597cCC9c72A28A71abb9DD590FEB333B8B09',
-      rewardsFlywheel: '0x...'
+      protocolManager: '0xD0aA2A1076c7EFfE6f6DAE959B7e512Ad557F3D9',
+      poolDeployer: '0x340d3c4f461A27Ca87BDDBf071eDEF42f605503E',
+      revenueManager: '0x3ee6B06e1F1DA1dD8a8809eE19AFe98DA6C5EC4C',
+      nftFactory: '0xDCa93973C41915F544f14Ca44de2697028888B1C',
+      rewardsFlywheel: '0x7d21c990bf7D2E1d691Cc082F7ba121D3A7d868B'
     }
   },
   2020: {
